@@ -1,0 +1,6 @@
+name = VoIP Views
+description = Create views that can be read out on a phone.
+package = "VoIP Drupal"
+dependencies[] = views
+dependencies[] = voipscriptstore
+core = 6.x

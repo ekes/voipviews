@@ -1,0 +1,5 @@
+name = VoIP Script Store
+description = Attempt at making life easier for those non-interactive moments.
+package = "VoIP Drupal"
+dependencies[] = voipcall
+core = 6.x
