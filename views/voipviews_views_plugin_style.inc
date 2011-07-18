@@ -65,10 +65,8 @@ class voipviews_views_plugin_style extends views_plugin_style {
       return;
     }
 
-
     // Group the rows according to the grouping field, if specified.
     $sets = $this->render_grouping($this->view->result, $this->options['grouping']);
-
     // Render each group separately and concatenate.  Plugins may override this
     // method if they wish some other way of handling grouping.
     $output = array();

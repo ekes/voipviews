@@ -129,8 +129,7 @@ function voipviews_read_view_script($view_name, $display_id, $args = array()) {
   }
 
   $view->pre_execute($args);
-  // $output = $view->preview($display_id, $args);
-  $stored_script = $view->display_handler->execute();
+  $stored_script = $view->display_handler->preview();
   $view->post_execute();
 
   // @todo put this in the store class.
