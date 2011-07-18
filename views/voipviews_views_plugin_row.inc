@@ -23,7 +23,5 @@ class voipviews_views_plugin_row extends views_plugin_row {
       }
     }
     $voipscript->addReturn();
-
-    return $voipscript;
   }
 }
