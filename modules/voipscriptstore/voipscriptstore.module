@@ -64,6 +64,9 @@ class voipScriptStore extends ArrayObject {
   }
 
   function appendScript(voipScriptStore $script) {
+    if (! is_object($script)) {
+      return;
+    }
     foreach ($script as $line) {
       $this->offsetSet(NULL, $line);
     }
