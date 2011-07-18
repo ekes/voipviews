@@ -32,11 +32,29 @@ class voipviews_views_plugin_style extends views_plugin_style {
       foreach ($keys as $id) {
         $themed_output = $this->view->field[$id]->theme($row);
         if ($this->view->field[$id]->element_type() == 'voipviews') {
+          // @todo check empty behaviour here
           $script = $this->view->field[$id]->render_script($row);
         }
         else {
           $script = new voipScriptStore();
-          $script->addSay($themed_output);
+          if ($themed_output !== 0 && empty($themed_output)) {
+            if ($this->view->field[$id]->options['hide_empty'] || empty($this->view->field[$id]->options['empty'])) {
+              // nuffink now
+            }
+            else {
+              if (! empty($label)) {
+                $script->addSay($label . '.');
+              }
+              $script->addSay($this->view->field[$id]->options['empty']);
+            }
+          }
+          else {
+            $label = $this->view->field[$id]->label(); // @todo clean characters.
+            if (! empty($label)) {
+              $script->addSay($label . '.');
+            }
+            $script->addSay($themed_output);
+          }
         }
         $this->rendered_fields[$count][$id] = $themed_output;
         $this->rendered_scripts[$count][$id] = $script;
@@ -45,7 +63,11 @@ class voipviews_views_plugin_style extends views_plugin_style {
     unset($this->view->row_index);
   }
 
-  // @todo describe me
+  /**
+   * Retrieve an individual fields script.
+   *
+   * @see render_fields().
+   */
   function get_script($index, $field) {
     if (!isset($this->rendered_scripts)) {
       $this->render_fields($this->view->result);
