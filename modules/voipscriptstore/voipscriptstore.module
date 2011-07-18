@@ -140,26 +140,36 @@ function voipscriptstore_voipscript_get_script_names() {
  * @todo Make this a factory of the class why not.
  */
 function voipscriptstore_voipscript_load_script($script_name, $params) {
-  $script = FALSE;
+  if ($script_name == 'voipscriptstore_run') {
+    $script = FALSE;
   
-  // if the script store object has been passed around it can be passed into
-  // the function as json
-  if (is_string($params['script'])) {
-    $params['script'] = json_decode($params['script'], true);
-  }
-  if (is_array($params['script'])) {
-    $params['script'] = new voipScriptStore($params['script']);
-  }
-
-  // if we have a valid script store make a VoipScript
-  if ($params['script'] instanceof voipScriptStore) {
-    $script_store = $params['script'];
-    $script = new VoipScript($script_store->getName(), $script_store->getVariables());
-    foreach ($script_store as $line) {
-      list($command, $params) = $line;
-      call_user_func_array(array($script, $command), $params);
+    // if the script store object has been passed around it can be passed into
+    // the function as json
+    if (is_string($params['script'])) {
+      $params['script'] = json_decode($params['script'], true);
     }
-  }
+    if (is_array($params['script'])) {
+      $params['script'] = new voipScriptStore($params['script']);
+    }
 
-  return $script;
+    // if we have a valid script store make a VoipScript
+    if ($params['script'] instanceof voipScriptStore) {
+      $script_store = $params['script'];
+      $script = new VoipScript($script_store->getName(), $script_store->getVariables());
+      foreach ($script_store as $line) {
+        list($command, $params) = $line;
+        call_user_func_array(array($script, $command), $params);
+      }
+    }
+
+    if (! $script) {
+      $script = new VoipScript('voipscriptstore_error');
+      $script->addSay('Error running script.');
+      $script->addLog('voipscriptstore_error called', $params);
+      watchdog('DEBUG', var_export($params,true));
+      $script->addReturn();
+    }
+
+    return $script;
+  }
 }

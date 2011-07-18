@@ -26,7 +26,6 @@ class voipviews_handler_field_sms_text extends views_handler_field {
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     // Remove alter_text checkbox
-    dsm($form);
     unset($form['alter']['alter_text']);
     unset($form['alter']['text']['#dependency']);
     unset($form['alter']['text']['#process']);

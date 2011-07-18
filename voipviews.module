@@ -33,13 +33,10 @@ function voipviews_refresh_extensions() {
     return;
   }
 
-dsm('voipviews_refresh_extensions');
-
   $extensions = voipextension_load_module_extensions('voipviews');
 
   // cycle through all voip views displays
   $views = views_get_applicable_views('uses voipextension');
-dsm($views);
   foreach ($views as $data) {
     list($view, $display_id) = $data;
     $view->set_display($display_id);
@@ -51,8 +48,6 @@ dsm($views);
         $extension['title'] = $view->display_handler->get_option('voipextension_title');
         $extension['description'] = $view->display_handler->get_option('voipextension_description');
         $extension['script_callback'] = 'voipviews_voipextension_script_callback';
-dsm('voipextension_update');
-dsm($extension);
         voipextension_update($extension);
         unset($extensions[$view->name . '|' . $display_id]);
       }
@@ -65,8 +60,6 @@ dsm($extension);
           'module_id' => $view->name . '|' . $display_id,
           'script_callback' => 'voipviews_voipextension_script_callback',
         );
-dsm('voipextension_create');
-dsm($extension);
         voipextension_create($extension);
       }
     }
@@ -74,8 +67,6 @@ dsm($extension);
 
   // remove any extensions that are remaining they are deleted or disabled.
   foreach($extensions as $module_id => $extension) {
-dsm('voipextension_delete');
-dsm($extension);
     voipextension_delete($extension['eid']);
   }
 
@@ -111,24 +102,25 @@ function voipviews_voipscript_get_script_names() {
 function voipviews_voipscript_load_script($script_name, $params = NULL) {
   switch ($script_name) {
     case 'voipviews_read_view':
-      return voipviews_read_view_script($params['view_name'], $parms['display_id']);
+      return voipviews_read_view_script($params['view_name'], $params['display_id']);
   }
 } 
 
 /**
  * Return a script from a view display.
  */
-function voipview_read_view_script($view_name, $display_id, $args = array()) {
-  $view = views_get_view($name);
+function voipviews_read_view_script($view_name, $display_id, $args = array()) {
+  $view = views_get_view($view_name);
   if (!$view || !$view->access($display_id)) {
    $script = new VoipScript('voipviews_script_view_read');
    $script->addSay('There has been an error accessing the information you require. Sorry.');
+   $script->addReturn();
    return $script;
   }
-
   if (! $view->set_display($display_id)) {
    $script = new VoipScript('voipviews_script_view_read');
    $script->addSay('There has been an error accessing the information you require. Sorry.');
+   $script->addReturn();
    return $script;
   }
 
@@ -138,7 +130,7 @@ function voipview_read_view_script($view_name, $display_id, $args = array()) {
 
   $view->pre_execute($args);
   // $output = $view->preview($display_id, $args);
-  $stored_script = $view->display_handler->render();
+  $stored_script = $view->display_handler->execute();
   $view->post_execute();
 
   // @todo put this in the store class.

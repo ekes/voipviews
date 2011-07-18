@@ -7,15 +7,11 @@
 class voipviews_views_plugin_display extends views_plugin_display {
   function defaultable_sections($section = NULL) {
     $sections = parent::defaultable_sections($section);
-//dsm('defaultable_sections(' . $section . ')');
-//dsm($sections);
     return $sections;
   }
 
   function option_definition() {
     $options = parent::option_definition();
-//dsm('option_definition');
-//dsm($options);
     $options['voipextension_enable'] = array('default' => 0);
     $options['voipextension_directory_type'] = array('default' => 1);
     $options['voipextension_title'] = array('default' => '', 'translatable' => TRUE);
@@ -41,8 +37,6 @@ class voipviews_views_plugin_display extends views_plugin_display {
 
 
     // Add VoIP specific fields
-//dsm('options_summary');
-//dsm($options);
     $categories['voip'] = array(
       'title' => t('VoIP settings'),
     );
@@ -67,9 +61,6 @@ class voipviews_views_plugin_display extends views_plugin_display {
 
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-//dsm('options_form');
-//dsm($form);
-//dsm($form_state);
     switch ($form_state['section']) {
       case 'header':
       case 'footer':
