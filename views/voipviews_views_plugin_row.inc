@@ -22,6 +22,7 @@ class voipviews_views_plugin_row extends views_plugin_row {
         $voipscript->appendScript($script_output);
       }
     }
+    $voipscript->addReturn();
 
     return $voipscript;
   }
