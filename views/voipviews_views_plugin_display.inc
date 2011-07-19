@@ -42,7 +42,7 @@ class voipviews_views_plugin_display extends views_plugin_display {
     );
 
     if ($this->get_option('voipextension_enable')) {
-      if ($extension = voipextension_load_bymoduleid('voipviews', $this->view->name . '|' . $this->display->id)) {
+      if ($extension = voipextension_load_by_module_id('voipviews', $this->view->name . '|' . $this->display->id)) {
         $extension_eid = $extension['eid'];
       }
       else {
