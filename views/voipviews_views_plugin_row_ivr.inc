@@ -51,39 +51,31 @@ class voipviews_views_plugin_row_ivr extends views_plugin_row {
     /**
      * setIvrMenu standard settings.
      */
-    $form['ivr_settings'] = array(
-      '#type' => 'fieldset',
-      '#tree' => FALSE,
-      '#title' => t('IVR settings'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
-    // @todo the promt can also be url; prompt object.
-    $form['ivr_settings']['ivr_prompt_intro'] = array(
+    $form['ivr_prompt_intro'] = array(
       '#title' => t('Prompt message introduction'),
       '#type' => 'textfield',
       '#default_value' => filter_xss_admin($this->options['ivr_prompt_intro']),
       '#description' => t('Prompt message to read. Additional lines can be added for each key option below.'),
     );
-    $form['ivr_settings']['ivr_invalid_msg'] = array(
+    $form['ivr_invalid_msg'] = array(
       '#title' => t('Invalid input message'),
       '#type' => 'textfield',
       '#default_value' => filter_xss_admin($this->options['ivr_invalid_msg']),
       '#description' => t('This is the message that will be read out if an invalid key is pressed.'),
     );
-    $form['ivr_settings']['ivr_no_input_msg'] = array(
+    $form['ivr_no_input_msg'] = array(
       '#title' => t('No key pressed message'),
       '#type' => 'textfield',
       '#default_value' => filter_xss_admin($this->options['ivr_no_input_msg']),
       '#description' => t('This is the message that will be read out if an no key is pressed by the timeout.'),
     );
-    $form['ivr_settings']['ivr_max_attempts'] = array(
+    $form['ivr_max_attempts'] = array(
       '#title' => t('Maximum attempts'),
       '#type' => 'textfield',
       '#default_value' => intval($this->options['ivr_max_attempts']),
       '#description' => t('Maximum number of times that the menu is read out on failure.'),
     );
-    $form['ivr_settings']['ivr_timeout'] = array(
+    $form['ivr_timeout'] = array(
       '#title' => t('Timeout'),
       '#type' => 'textfield',
       '#default_value' => intval($this->options['ivr_timeout']),
@@ -149,7 +141,6 @@ class voipviews_views_plugin_row_ivr extends views_plugin_row {
       );
     }
   }
-
 
   /**
    * Renders the views.
