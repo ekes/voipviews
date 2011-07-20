@@ -31,7 +31,7 @@ function theme_voipviews_view_preview($script) {
   foreach ($script as $key => $line) {
     list($cmd, $params) = $line;
     array_walk($params, '_theme_voipviews_parameters');
-    $output .= '<p><span class="voipviews-row">' . $key . ':</span> <span class="voipviews-cmd>'. $cmd . '</span><span class="voipviews-params">( ' . implode(', ', $params) . ' )</span></p>';
+    $output .= '<p><span class="voipviews-row">' . $key . ':</span> <span class="voipviews-cmd">'. $cmd . '</span><span class="voipviews-params">( ' . implode(', ', $params) . ' )</span></p>';
   }
   $output .= '</div>';
  
