@@ -160,7 +160,7 @@ class voipviews_views_plugin_display extends views_plugin_display {
   function preview() {
     $voipscript = $this->view->render($this->current_display);
     if ($this->view->live_preview) {
-      return '<pre>' . print_r($voipscript, true) . '</pre>';
+      return theme('voipviews_view_preview', $voipscript);
     }
     else {
       return $voipscript;

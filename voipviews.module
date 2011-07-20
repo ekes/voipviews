@@ -16,7 +16,21 @@ function voipviews_views_api() {
 }
 
 /**
- * DEBUG: See see the output.
+ * Implementation of hook_theme().
+ */
+function voipviews_theme($existing, $type, $theme, $path) {
+  return array(
+    'voipviews_view_preview' => array(
+      'arguments' => array(
+        'voipscriptstore' => '',
+      ),
+      'file' => 'theme/voipviews.theme.inc',
+    ),
+  );
+}
+
+/**
+ * Impelementation of hook_menu().
  */
 function voipviews_menu() {
   // we can check for new, changed, extension on form submission, but not programatically

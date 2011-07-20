@@ -4,8 +4,6 @@ VoIP Views
 Views handling for adding into voipscripts. 
 
 @todo 
- * Upgrade to latest version of voipdrupal.
- * Add the plugin_field_gosub.
  * IVR forms js tidy up.
  * Tidy up theme section.
  * see other notes in code.
