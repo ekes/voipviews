@@ -25,15 +25,20 @@ function template_preprocess_voipviews_views_row(&$vars) {
  * Pretty print voipScriptStore for views live_preview.
  */
 function theme_voipviews_view_preview($script) {
-  $output = '<h3>Title: ' . check_plain($script->getName()) . '</h3>';
-  $output .= '<pre>Variables: ' . print_r($script->getVariables(), true) . '</pre>';
-  $output .= '<div class="voipviews-preview">';
-  foreach ($script as $key => $line) {
-    list($cmd, $params) = $line;
-    array_walk($params, '_theme_voipviews_parameters');
-    $output .= '<p><span class="voipviews-row">' . $key . ':</span> <span class="voipviews-cmd">'. $cmd . '</span><span class="voipviews-params">( ' . implode(', ', $params) . ' )</span></p>';
+  if (is_object($script)) {
+    $output = '<h3>Title: ' . check_plain($script->getName()) . '</h3>';
+    $output .= '<pre>Variables: ' . print_r($script->getVariables(), true) . '</pre>';
+    $output .= '<div class="voipviews-preview">';
+    foreach ($script as $key => $line) {
+      list($cmd, $params) = $line;
+      array_walk($params, '_theme_voipviews_parameters');
+      $output .= '<p><span class="voipviews-row">' . $key . ':</span> <span class="voipviews-cmd">'. $cmd . '</span><span class="voipviews-params">( ' . implode(', ', $params) . ' )</span></p>';
+    }
+    $output .= '</div>';
   }
-  $output .= '</div>';
+  else {
+    $output = t('Error rendering view.');
+  }
  
   return $output;
 }
