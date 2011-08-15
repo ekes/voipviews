@@ -120,6 +120,9 @@ function voipviews_views_handlers() {
       'voipviews_handler_field_ivr_previous_row' => array(
         'parent' => 'voipviews_handler_field_ivr',
       ),
+      'voipviews_handler_field_file_url' => array(
+        'parent' => 'views_handler_field_file',
+      ),
     ),
   );
 }
@@ -184,3 +187,28 @@ function voipviews_views_data() {
   );
   return $data;
 }
+
+/**
+ * Implementation of hook_views_data_alter().
+ */
+function voipviews_views_data_alter(&$data) {
+  $data['files']['fileurl'] = array(
+    'title' => t('URL'),
+    'help' => t('Plain text absolute url to the file'),
+    'field' => array(
+      'field' => 'filepath',
+      'handler' => 'voipviews_handler_field_file_url',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+}
+
