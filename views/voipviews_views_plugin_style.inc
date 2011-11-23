@@ -117,7 +117,7 @@ class voipviews_views_plugin_style extends views_plugin_style {
       $header_text = '';
     }
     if (! count($rows)) {
-      $empty_text = $view->display_handler->render_empty();
+      $empty_text = $this->view->display_handler->render_empty();
     }
     if (count($rows) || $this->view->display_handler->get_option('footer_empty')) {
       $footer_text = $this->view->display_handler->render_footer();
