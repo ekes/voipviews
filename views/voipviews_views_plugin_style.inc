@@ -110,17 +110,17 @@ class voipviews_views_plugin_style extends views_plugin_style {
     // What about sending multiple voipscriptstore objects that can be manipulated
     // and put together into the final returned script?
     // Normally $header, $footer etc. would be available seperately.
-    if (count($rows) || $this->view->display_handler->get_option('header_empty')) {
-      $header_text = $this->view->display_handler->render_header();
+    if ($empty = !empty($rows) || $this->view->display_handler->get_option('header_empty')) {
+      $header_text = $this->view->display_handler->render_header('header', $empty);
     }
     else {
       $header_text = '';
     }
     if (! count($rows)) {
-      $empty_text = $view->display_handler->render_empty();
+      $empty_text = $this->view->display_handler->render_area('empty');
     }
-    if (count($rows) || $this->view->display_handler->get_option('footer_empty')) {
-      $footer_text = $this->view->display_handler->render_footer();
+    if ($empty = !empty($rows) || $this->view->display_handler->get_option('footer_empty')) {
+      $footer_text = $this->view->display_handler->render_area('footer', $empty);
     }
     else {
       $footer_text = '';
