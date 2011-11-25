@@ -116,7 +116,8 @@ function voipviews_voipscript_get_script_names() {
 function voipviews_voipscript_load_script($script_name, $params = NULL) {
   switch ($script_name) {
     case 'voipviews_read_view':
-      return voipviews_read_view_script($params['view_name'], $params['display_id']);
+      $args = (! empty($params['args'])) ? json_decode($params['args']) : array();
+      return voipviews_read_view_script($params['view_name'], $params['display_id'], $args);
   }
 } 
 
