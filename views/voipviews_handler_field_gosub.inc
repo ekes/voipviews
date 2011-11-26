@@ -44,7 +44,12 @@ class voipviews_handler_field_gosub extends views_handler_field {
   function render_script($values) {
     $script = new voipScriptStore();
     if (! empty($this->options['gosub_script'])) {
-      $params = json_decode($this->options['gosub_params'], true);
+      // token replacement; @todo should be made optional with ui and token list.
+      $json = $this->options['gosub_params'];
+      $tokens = $this->get_render_tokens($json);
+      // we don't want to xss filter json so doing direct replacement
+      $json = strtr($json, $tokens);
+      $params = json_decode($json, true);
       $script->addGosub($this->options['gosub_script'], (array) $params);
     }
     return $script;
