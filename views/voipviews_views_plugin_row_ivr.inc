@@ -181,10 +181,19 @@ class voipviews_views_plugin_row_ivr extends views_plugin_row {
 
     if (count($key_scripts)) {
       // add ivr menu with prompt and keys we have encountered.
-      $prompt = (! empty($this->options['ivr_prompt_intro'])) ? $this->options['ivr_prompt_intro'] . " \n" : '';
+      $prompt = (! empty($this->options['ivr_prompt_intro'])) ? $this->options['ivr_prompt_intro'] . ' ' : '';
       $prompt .= implode($prompts);
       $voipscript->addLabel('row_' . $view->row_index . '_menu');
-      $voipscript->addRunIvrMenu($prompt, array_keys($prompts), $this->options['ivr_invalid_msg'], $this->options['ivr_no_input_msg'], $this->options['ivr_max_attempts'], $this->options['ivr_timeout']);
+      // add options pointing to key group scripts
+      $input_options = array();
+      foreach ($key_scripts as $key_group => $scripts) {
+        $input_options[$key_group] = 'row_' . $view->row_index . '_key_' . $key_group;
+      }
+      $voipscript->addRunIvrMenu($prompt, $input_options, $this->options['ivr_invalid_msg'], $this->options['ivr_no_input_msg'], $this->options['ivr_max_attempts'], $this->options['ivr_timeout']);
+      $voipscript->addGoto('%ivr_option_selected');
+      $voipscript->addLabel('no_input_received');
+      $voipscript->addSay($this->options['ivr_invalid_msg']);
+      $voipscript->addGoto('row_' . $view->row_index . '_menu'); // @todo beter to go to next row/return maybe?
 
       // add key groups scripts.
       foreach ($key_scripts as $key_group => $scripts) {
@@ -193,6 +202,7 @@ class voipviews_views_plugin_row_ivr extends views_plugin_row {
           $voipscript->appendScript($script);
         }
       }
+
     }
     else {
       if($view->live_preview) {
