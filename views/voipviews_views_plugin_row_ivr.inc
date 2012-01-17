@@ -173,7 +173,7 @@ class voipviews_views_plugin_row_ivr extends views_plugin_row {
         }
         else {
           // include this key's prompt, and collect together.
-          $prompts[$key_group] = (! empty($this->options['ivr_prompt']["\\$key_group"])) ? $this->options['ivr_prompt']["\\$key_group"] . " \n" : '';
+          $prompts[$key_group] = (! empty($this->options['ivr_prompt']["\\$key_group"])) ? $this->options['ivr_prompt']["\\$key_group"] . " " : '';
           $key_scripts[$key_group][] = $script_output;
         }
       }
