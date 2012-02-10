@@ -202,10 +202,10 @@ class voipviews_views_plugin_row_ivr extends views_plugin_row {
           $voipscript->appendScript($script);
         }
       }
-
+      $voipscript->addLabel('row_' . $view->row_index . '_end');
     }
     else {
-      if($view->live_preview) {
+      if ($view->live_preview) {
         drupal_set_message('Configure the row style to add menu options and prompts');
       }
     }
