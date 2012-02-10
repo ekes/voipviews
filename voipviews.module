@@ -6,7 +6,7 @@
  */
 
 /**
- * Implementation of hook_views_api().
+ * Implements hook_views_api().
  */
 function voipviews_views_api() {
   return array(
@@ -16,7 +16,7 @@ function voipviews_views_api() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implements hook_theme().
  */
 function voipviews_theme($existing, $type, $theme, $path) {
   return array(
@@ -30,12 +30,15 @@ function voipviews_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Impelementation of hook_menu().
+ * Implements hook_menu().
+ *
+ * We can check for new, changed, extensions on form submission, but not
+ * programatically similarly on deleting there is nothing in $view->delete
+ * (just form submission if from ui)
+ * a menu rebuild is however always triggered, so updating our extensions
+ * here.
  */
 function voipviews_menu() {
-  // we can check for new, changed, extension on form submission, but not programatically
-  // similarly on deleting there is nothing in $view->delete (just form submission if from ui)
-  // a menu rebuild is however always triggered, so updating our extensions here
   voipviews_refresh_extensions();
 }
 
@@ -49,14 +52,14 @@ function voipviews_refresh_extensions() {
 
   $extensions = voipextension_load_module_extensions('voipviews');
 
-  // cycle through all voip views displays
+  // Cycle through all voip views displays.
   $views = views_get_applicable_views('uses voipextension');
   foreach ($views as $data) {
     list($view, $display_id) = $data;
     $view->set_display($display_id);
-    // if the voipextension checkbox is enabled
+    // If the voipextension checkbox is enabled.
     if ($view->display_handler->get_option('voipextension_enable')) {
-      // check to see if it exists already
+      // Check to see if it exists already.
       if (isset($extensions[$view->name . '|' . $display_id])) {
         $extension = $extensions[$view->name . '|' . $display_id];
         $extension['title'] = $view->display_handler->get_option('voipextension_title');
@@ -66,7 +69,7 @@ function voipviews_refresh_extensions() {
         unset($extensions[$view->name . '|' . $display_id]);
       }
       else {
-        // otherwise create new extension
+        // Otherwise create new extension.
         $extension = array(
           'title' => $view->display_handler->get_option('voipextension_title'),
           'description' =>  $view->display_handler->get_option('voipextension_description'),
@@ -79,8 +82,8 @@ function voipviews_refresh_extensions() {
     }
   }
 
-  // remove any extensions that are remaining they are deleted or disabled.
-  foreach($extensions as $module_id => $extension) {
+  // Remove any extensions that are remaining they are deleted or disabled.
+  foreach ($extensions as $module_id => $extension) {
     voipextension_delete($extension['eid']);
   }
 
@@ -102,7 +105,7 @@ function voipviews_voipextension_script_callback(&$extension) {
 }
 
 /**
- * Implementation of hook_voipscript_get_script_names().
+ * Implements hook_voipscript_get_script_names().
  */
 function voipviews_voipscript_get_script_names() {
   return array(
@@ -111,7 +114,7 @@ function voipviews_voipscript_get_script_names() {
 }
 
 /**
- * Implementation of hook_voipscript_load_script().
+ * Implements hook_voipscript_load_script().
  */
 function voipviews_voipscript_load_script($script_name, $params = NULL) {
   switch ($script_name) {
@@ -119,26 +122,50 @@ function voipviews_voipscript_load_script($script_name, $params = NULL) {
       $args = (! empty($params['args'])) ? json_decode($params['args']) : array();
       return voipviews_read_view_script($params['view_name'], $params['display_id'], $args);
   }
-} 
+}
 
 /**
- * Return a script from a view display.
+ * Return a script from a VoIP view display.
+ *
+ * Example:
+ *   $script->addGosub(
+ *     'voipviews_read_view',
+ *     array(
+ *       'view_name' => 'my_view_name',
+ *       'display_id' => 'voipviews_1',
+ *       'args' => json_encode(
+ *         array('first_arg', 'second_arg'),
+ *       ),
+ *     )
+ *   );
+ *
+ * @todo allow passing of filter settings.
+ *
+ * @param string $view_name
+ *   Unique view name.
+ * @param string $display_id
+ *   VoIP View Display ID.
+ * @param array $args
+ *   Arguments to be passed to the View before executing.
+ *
+ * @return object
+ *   The VoipScript returned from the view.
  */
 function voipviews_read_view_script($view_name, $display_id, $args = array()) {
   $view = views_get_view($view_name);
   if (!$view || !$view->access($display_id)) {
-   $script = new VoipScript('voipviews_script_view_read');
-   watchdog('voipviews', 'Unable to load or access view @view_name display @display_id', array('@view_name' => $view_name, '@display_id' => $display_id), WATCHDOG_ERROR);
-   $script->addSay('There has been an error accessing the information you require. Sorry.');
-   $script->addReturn();
-   return $script;
+    $script = new VoipScript('voipviews_script_view_read');
+    watchdog('voipviews', 'Unable to load or access view @view_name display @display_id', array('@view_name' => $view_name, '@display_id' => $display_id), WATCHDOG_ERROR);
+    $script->addSay('There has been an error accessing the information you require. Sorry.');
+    $script->addReturn();
+    return $script;
   }
   if (! $view->set_display($display_id)) {
-   $script = new VoipScript('voipviews_script_view_read');
-   watchdog('voipviews', 'Unable to set display @display_id on view @view_name', array('@view_name' => $view_name, '@display_id' => $display_id), WATCHDOG_ERROR);
-   $script->addSay('There has been an error accessing the information you require. Sorry.');
-   $script->addReturn();
-   return $script;
+    $script = new VoipScript('voipviews_script_view_read');
+    watchdog('voipviews', 'Unable to set display @display_id on view @view_name', array('@view_name' => $view_name, '@display_id' => $display_id), WATCHDOG_ERROR);
+    $script->addSay('There has been an error accessing the information you require. Sorry.');
+    $script->addReturn();
+    return $script;
   }
 
   if (! empty($options['filters'])) {
