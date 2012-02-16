@@ -110,6 +110,7 @@ function voipviews_voipextension_script_callback(&$extension) {
 function voipviews_voipscript_get_script_names() {
   return array(
     'voipviews_read_view',
+    'voipviews_node_tag_new',
   );
 }
 
@@ -121,6 +122,8 @@ function voipviews_voipscript_load_script($script_name, $params = NULL) {
     case 'voipviews_read_view':
       $args = (! empty($params['args'])) ? json_decode($params['args']) : array();
       return voipviews_read_view_script($params['view_name'], $params['display_id'], $args);
+    case 'voipviews_node_tag_new':
+      return voipviews_node_tag_new_script($params['nid']);
   }
 }
 
@@ -183,5 +186,20 @@ function voipviews_read_view_script($view_name, $display_id, $args = array()) {
     call_user_func_array(array($script, $command), $params);
   }
 
+  return $script;
+}
+
+/**
+ * Script callback: Update new tag no a nid.
+ *
+ * Helper script to make a node a seen when it is read out.
+ *
+ * @todo investigate alternative is to evaluate function
+ * as VoipScript does for ^php_function();
+ */
+function voipviews_node_tag_new_script($nid) {
+  $script = new VoipScript('voipviews_script_view_read');
+  node_tag_new($nid);
+  $script->addReturn();
   return $script;
 }

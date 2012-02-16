@@ -3,7 +3,8 @@ VoIP Views
 
 Views handling for adding into voipscripts. 
 
-@todo 
+@todo
+ * Add field for $script->addSet('variable', 'value')
  * IVR forms js tidy up.
  * Tidy up theme section.
  * see other notes in code.
