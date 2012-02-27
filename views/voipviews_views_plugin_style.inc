@@ -33,7 +33,12 @@ class voipviews_views_plugin_style extends views_plugin_style {
         $themed_output = $this->view->field[$id]->theme($row);
         if ($this->view->field[$id]->element_type() == 'voipviews') {
           // @todo check empty behaviour here
-          $script = $this->view->field[$id]->render_script($row);
+          $script = new voipScriptStore();
+          $label = $this->view->field[$id]->label();
+          if (! empty($label)) {
+            $script->addSay($label);
+          }
+          $script->appendScript($this->view->field[$id]->render_script($row));
         }
         else {
           $script = new voipScriptStore();
