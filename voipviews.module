@@ -111,6 +111,7 @@ function voipviews_voipscript_get_script_names() {
   return array(
     'voipviews_read_view',
     'voipviews_node_tag_new',
+    'voipviews_node_untag_new',
   );
 }
 
@@ -124,6 +125,8 @@ function voipviews_voipscript_load_script($script_name, $params = NULL) {
       return voipviews_read_view_script($params['view_name'], $params['display_id'], $args);
     case 'voipviews_node_tag_new':
       return voipviews_node_tag_new_script($params['nid']);
+    case 'voipviews_node_untag_new':
+      return voipviews_node_untag_new_script($params['nid']);
   }
 }
 
@@ -200,6 +203,25 @@ function voipviews_read_view_script($view_name, $display_id, $args = array()) {
 function voipviews_node_tag_new_script($nid) {
   $script = new VoipScript('voipviews_script_view_read');
   node_tag_new($nid);
+  $script->addReturn();
+  return $script;
+}
+
+/**
+ * Script callback: Remove user read history of node. Set "Unread".
+ *
+ * Helper script to make node 'unseen' after it has been marked.
+ */
+function voipviews_node_untag_new_script($nid) {
+  $script = new VoipScript('voipviews_script_view_unread');
+  global $user;
+
+  if ($user->uid) {
+    if (node_last_viewed($nid)) {
+      db_query('DELETE FROM {history} WHERE uid = %d AND nid = %d', $user->uid, $nid);
+    }
+  }
+
   $script->addReturn();
   return $script;
 }
