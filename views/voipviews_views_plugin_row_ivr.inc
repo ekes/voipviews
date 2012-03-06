@@ -191,7 +191,7 @@ class voipviews_views_plugin_row_ivr extends views_plugin_row {
       }
       $voipscript->addRunIvrMenu($prompt, $input_options, $this->options['ivr_invalid_msg'], $this->options['ivr_no_input_msg'], $this->options['ivr_max_attempts'], $this->options['ivr_timeout']);
       $voipscript->addGoto('%ivr_option_selected');
-      $voipscript->addLabel('no_input_received');
+      $voipscript->addLabel('no_input_received_' . $view->row_index);
       $voipscript->addSay($this->options['ivr_invalid_msg']);
       $voipscript->addGoto('row_' . $view->row_index . '_menu'); // @todo beter to go to next row/return maybe?
 
